@@ -66,15 +66,10 @@ Released   : 20130902
 \def\x{{\mathbf x}}
 \def\z{{\mathbf z}}
 \def\y{\mathbf{y}}
-\def\r{\mathbf{r}}
-\def\d{\mathbf{d}}
 
 \def\D{{\mathbf D}}
-\def\X{{\mathbf X}}
-\def\A{{\mathbf A}}
 
 \DeclareMathOperator{\Mr}{\mathbf{M^r}}
-\DeclareMathOperator{\Mc}{\mathbf{M^{c}}}
 \DeclareMathOperator{\Mcp}{\mathbf{M^{c+}}}
 \DeclareMathOperator{\Mcm}{\mathbf{M^{c-}}}
 \DeclareMathOperator{\bfalpha}{\alpha}
@@ -90,7 +85,7 @@ Released   : 20130902
 \[
 \y = \Mr \x + \theta^+ \Mcp \mathbf{1} + \theta^- \Mcm \mathbf{1},
 \]
-where \(\x\) is the input signal, \(\mathbf{1}\) is the all-ones vector in \(\mathbb{R}^{N}\), \(\theta^+/\theta^-\) are positive negative clipping thesholds respectively, and \(\Mr, \Mcp\) and \(\Mcm\) are diagonal sensing matrices in \(\{0,1\}^{N \times N}\) that define the reliable, positive and negative clipped samples respectively.
+where \(\x\) is the input signal, \(\mathbf{1}\) is the all-ones vector in \(\mathbb{R}^{N}\), \(\theta^+/\theta^-\) are positive negative clipping thesholds respectively, and \(\Mr, \Mcp\) and \(\Mcm\) are diagonal binary sensing matrices that define the reliable, positive and negative clipped samples respectively.
 </p>
 <p> Recovering a clipped signal is a challenging inverse problem, since the distortion is nonlinear and high energy samples are missing. </p>
 
@@ -119,7 +114,7 @@ where \(\mathcal{C}(\y)\) is the set of admissible signals, i.e. the set of sign
 \[
 \mathcal{C}(\y) \triangleq \{\x| \Mr \y=\Mr \x, \Mcp \x \succeq \Mcp \y, \Mcm \x \preceq \Mcm \y\},
 \]
-and \(\dEU (\x, \mathcal{C}(\y))\) is the Euclidean distance between the estimated signal \(\x\) and the set \(\mathcal{C}(\y))\):
+and \(\dEU (\x, \mathcal{C}(\y))\) is the Euclidean distance between the estimated signal \(\x\) and the set \(\mathcal{C}(\y)\):
 \[
 \dEU (\x, \mathcal{C}(\y)) = \min_{\z \in \mathcal{C}(\y)} \|\x-\z\|_2.
 \]
@@ -127,7 +122,141 @@ and \(\dEU (\x, \mathcal{C}(\y))\) is the Euclidean distance between the estimat
 <p>The proposed algorithm leads to significant performance improvement compared to state-of-the art dictionary learning algorithms applied to declipping:</p>
 <p style="text-align:center;"> <img src="images/declip_glockenspiel_consDL.png" alt="" width="600" align="middle"> <p/>
 
-You can find the pre-print <a href="files/consistent_DL_LVA18.pdf">here</a> and the MATLAB code <a href="https://github.com/LucasRr/Dictionary_learning_for_declipping">here</a>.
+<h2> Audio examples:</h2>
+
+<p>
+We here compare 4 different approaches:
+ <ul style="list-style-type:disc">
+  <li> <b>IHT:</b> discards the clipped samples and performs sparse coding using Iterative Hard Thresholding (IHT) and a fixed DCT dictionary</li>
+  <li> <b>Dictionary Learning:</b> discards the clipped samples and performs a simple gradient descent-based dictionary learning algorithm (learnt on the unclipped samples)</li>
+  <li> <b>Consistent IHT:</b> performs consistent sparse coding (i.e. enforces the clipped samples to be above the clipping threshold), using a fixed DCT dictionary [1]</li>
+  <li> <b>Consistent dictionary learning:</b> performs consistent dictionary learning, as proposed in [2]</li>
+</ul>
+</p>
+<p>
+References:
+</p>
+<p>
+[1]: <b>Consistent iterative hard thresholding for signal declipping</b>, <br>
+   S. Kitic, L. Jacques, N. Madhu, M. P. Hopwood, A. Spriet, C. De Vleeschouwer, ICASSP, 2013<br>
+</p>
+<p>
+[2]: <b>Consistent dictionary learning for signal declipping</b>, <br>
+    L. Rencker, F. Bach, W. Wang, M. D. Plumbley, Latent Variable Analysis and Signal Separation (LVA/ICA), Guildford, UK, 2018
+</p>
+
+<p>
+You can find the pre-print <a href="files/consistent_DL_LVA18.pdf">here</a> and the MATLAB code <a href="files/Dictionary_learning_for_declipping.zip">here</a> or on my <a href="https://github.com/LucasRr/Dictionary_learning_for_declipping">github page</a>.
+</p>
+
+<table>
+  <tr>
+    <th rowspan="6">Music 1:</th>
+    <th>Clean: </th>
+    <td><audio controls> <source src="files/audio/music01_clean.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Clipped (5 dB): </th>
+    <td> <audio controls> <source src="files/audio/music01_clipped_5dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>IHT (0.75 dB): </th>
+    <td> <audio controls> <source src="files/audio/music01_declipped_IHT_0_75dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Dictionary learning (0.79 dB): </th>
+    <td><audio controls> <source src="files/audio/music01_declipped_DL_0_79dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent IHT (6.41 dB): </th>
+    <td><audio controls> <source src="files/audio/music01_declipped_consIHT_6_41dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent dictionary learning (7.68 dB): </th>
+    <td><audio controls> <source src="files/audio/music01_declipped_consDL_7_68dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+   
+  <tr>
+    <th rowspan="6">Music 2:</th>
+    <th>Clean: </th>
+    <td><audio controls> <source src="files/audio/music02_clean.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Clipped (5 dB): </th>
+    <td> <audio controls> <source src="files/audio/music02_clipped_5dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>IHT (0.70 dB): </th>
+    <td> <audio controls> <source src="files/audio/music02_declipped_IHT_0_70dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Dictionary learning (0.75 dB): </th>
+    <td><audio controls> <source src="files/audio/music02_declipped_DL_0_75dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent IHT (8.24 dB): </th>
+    <td><audio controls> <source src="files/audio/music02_declipped_consIHT_8_24dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent dictionary learning (10.30 dB): </th>
+    <td><audio controls> <source src="files/audio/music02_declipped_consDL_10_30dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  
+<tr>
+    <th rowspan="6">Female speech:</th>
+    <th>Clean: </th>
+    <td><audio controls> <source src="files/audio/female_clean.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Clipped (5 dB): </th>
+    <td> <audio controls> <source src="files/audio/female_clipped_5dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>IHT (0.83 dB): </th>
+    <td> <audio controls> <source src="files/audio/female_declipped_IHT_0_83dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Dictionary learning (0.91 dB): </th>
+    <td><audio controls> <source src="files/audio/female_declipped_DL_0_91dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent IHT (6.30 dB): </th>
+    <td><audio controls> <source src="files/audio/female_declipped_consIHT_6_30dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent dictionary learning (7.04 dB): </th>
+    <td><audio controls> <source src="files/audio/female_declipped_consDL_7_04dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+
+  <tr>
+    <th rowspan="6">Male speech:</th>
+    <th>Clean: </th>
+    <td><audio controls> <source src="files/audio/male_clean.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Clipped (5 dB): </th>
+    <td> <audio controls> <source src="files/audio/male_clipped_5dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>IHT (0.99 dB): </th>
+    <td> <audio controls> <source src="files/audio/male_declipped_IHT_0_99dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Dictionary learning (1.06 dB): </th>
+    <td><audio controls> <source src="files/audio/male_declipped_DL_1_06dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent IHT (6.71 dB): </th>
+    <td><audio controls> <source src="files/audio/male_declipped_consIHT_6_71dB.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Consistent dictionary learning (8.12 dB): </th>
+    <td><audio controls> <source src="files/audio/male_declipped_consDL_8_12dB.wav" type="audio/wav"> </audio></td>
+</tr>
+  
+</table>
+
+<br><br>
 
 <a name="greedy_algorithm"></a> 
 <h2> A greedy algorithm with learned statistics for sparse signal reconstruction </h2>
@@ -152,7 +281,7 @@ We proposed a greedy OMP-like algorithm that minimizes the proposed MAP formulat
 
 <p style="text-align:center;"> <img src="images/greedy_algorithm_learned_statistics.png" alt="" width="600" align="middle"> <p/>
 
-The paper can be found <a href="http://epubs.surrey.ac.uk/813519/1/Greedy_algorithm_with_learned_statistics.pdf">here</a>. The code will be made available soon.
+The paper can be found <a href="http://epubs.surrey.ac.uk/813519/1/Greedy_algorithm_with_learned_statistics.pdf">here</a>. 
 
 	</div>
 </div>
