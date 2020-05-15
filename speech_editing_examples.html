@@ -1,0 +1,445 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by TEMPLATED
+http://templated.co
+Released for free under the Creative Commons Attribution License
+
+Name       : Skeleton 
+Description: A two-column, fixed-width design with dark color scheme.
+Version    : 1.0
+Released   : 20130902
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Lucas Rencker's webpage</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
+<link href="default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+</head>
+<body>
+<div id="page" class="container">
+
+	<div id="main">
+		<div class="title">
+		<h1> Prosody imputation for text-based speech editing </h1>
+		<h3> Audio examples </h3>
+		</div>
+		
+		
+<p style="text-align:center;"> <img src="files/interspeech20/speech_editing.png" alt="" width="500" align="middle"> <p/>
+
+		
+<p>
+We show examples of how prosody imputation can be used to improve the quality of text-based speech editing. 
+Here the task is to "insert" (or "copy and paste") and word and its corresponding waveform from somewhere in a recording, into a different place in the recording.
+Simply inserting the corresponding waveform without any modifications leads to a prosody mismatch between the inserted words, and its context.
+Here we propose to modify the prosody features of the inserted word, in order to match its context. The experimental protocol is as follows:
+</p>
+
+<ol>
+<li> Select a sentence (e.g. "No doubt wiser counsels prevailed with [...] John Russell"), and a word to insert (e.g. "Lord"), and extract their corresponding (phoneme-aligned) waveforms. </li>
+<li> Compute the prosody features (i.e. phoneme duratin, pitch, and loudness) or the left context ("No doubt ... with") and right context ("John Russel"), using WORLD analysis.</li>
+<li> Given the phoneme sequence of the whole sentence ("No doubt wiser counsels prevailed with Lord John Russell"), and the previously computed prosody features of the left and right context, 
+<b>impute the missing prosody parameters</b> of the inserted word ("Lord") using our proposed LSTM-based parameter imputation algorithm.</li>
+<li> Using the estimated prosody parameters of the inserted word, re-synthesize the waveform of that word to match the estimated prosody. To do this, we first analyse its original waveform using WORLD analysis,
+then perform time stretching, pitch shifting, and loudness shifting on the WORLD coefficients, and finally synthesize the signal.</li>
+<li> Insert the re-synthesized word waveform, corresponding to the inserted word with modified prosody features, within the full sentence.</li>
+
+</ol>
+
+<p>
+Audio examples of word insertion without any prosody modification, and with prosody modification using our proposed method, are shown below.
+Word insertion without any modification often shows a mismatch in phoneme durations, pitch, or loudness, with its surroundings. 
+Our proposed prosody imputation and re-synthesis system often shows a more seamless insertion, thanks to the re-estimated prosody parameters. 
+This comes at the expense of synthesis artefacts which can sometimes be heard.
+</p>
+
+<p>
+As a reference, we show the full sentence that was extracted to serve as context. Note that context/word pairs were selected such that the original sentence in linguistically the same as the edited one.
+That way, the original sentence can serve as a reference of a sentence a "correct" prosody. However note that this is not the "ground truth", since there are many different "correct" ways a sentence or word can be pronounced, with various prosody curves.
+</p>
+
+
+<p> 
+	The audio examples are shown below. For each example, the inserted word is shown in <b>bold</b>.
+</p>
+
+
+<br><br>.
+
+
+
+<ul style="list-style-type:disc">
+<li> "The Secret Service will be better <b>able</b> to plan its own long-range personnel requirements if it knows with reasonable certainty": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/ABLE_LJ050-0250_LJ044-0059_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/ABLE_LJ050-0250_LJ044-0059_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/ABLE_LJ050-0250_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+<br><br>
+    
+<li> "Second, <b>because</b> it will provide a reinvigorated": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/BECAUSE_LJ024-0134_LJ040-0122_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/BECAUSE_LJ024-0134_LJ040-0122_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/BECAUSE_LJ024-0134_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "I will quote an extract <b>from</b> the reverend gentleman's own journal.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/FROM_LJ009-0015_LJ043-0060_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/FROM_LJ009-0015_LJ043-0060_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/FROM_LJ009-0015_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<!--
+<li> "a junior <b>high</b> school in the Bronx, where the other children apparently teased him because of his, quote, western clothes and Texas accent.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/HIGH_LJ040-0122_LJ028-0490_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/HIGH_LJ040-0122_LJ028-0490_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/HIGH_LJ040-0122_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+-->
+
+
+<li> "on the middle of which is placed the gibbet, extending from the <b>jail</b> across the Old Bailey.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/JAIL_LJ008-0046_LJ008-0007_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/JAIL_LJ008-0046_LJ008-0007_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/JAIL_LJ008-0046_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "This son, <b>John</b> William Bean, was fully identified by Dasset, and presently examined by the Privy Council.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/JOHN_LJ010-0272_LJ019-0179_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/JOHN_LJ010-0272_LJ019-0179_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/JOHN_LJ010-0272_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "Thornley testified, quote, At which time he looked at me <b>like</b> a betrayed Caesar and screamed, screamed definitely, "Not you, too, Thornley!"": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/LIKE_LJ041-0170_LJ034-0213_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/LIKE_LJ041-0170_LJ034-0213_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/LIKE_LJ041-0170_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "No doubt wiser counsels prevailed with <b>Lord</b> John Russell,": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/LORD_LJ019-0197_LJ017-0169_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/LORD_LJ019-0197_LJ017-0169_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/LORD_LJ019-0197_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+
+<li> "and accepts the <b>necessary</b> security precautions which they recommend.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/NECESSARY_LJ046-0093_LJ005-0255_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/NECESSARY_LJ046-0093_LJ005-0255_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/NECESSARY_LJ046-0093_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "a number of organs which <b>never</b> could have been of use to any kind of creature save a terrestrial quadruped.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/NEVER_LJ027-0105_LJ028-0468_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/NEVER_LJ027-0105_LJ028-0468_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/NEVER_LJ027-0105_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "At this point in the interview, Hosty gave Mrs. <b>Paine</b> his name and office telephone number on a piece of paper.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/PAINE_LJ047-0164_LJ032-0251_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/PAINE_LJ047-0164_LJ032-0251_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/PAINE_LJ047-0164_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "We have <b>passed</b> through the formative period of code making in the National Recovery Administration": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/PASSED_LJ021-0088_LJ012-0035_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/PASSED_LJ021-0088_LJ012-0035_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/PASSED_LJ021-0088_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "The review of the latter <b>period</b> will evaluate his personal and employment relations, his attempt to kill General Walker, his political activities,": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/PERIOD_LJ040-0059_LJ046-0189_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/PERIOD_LJ040-0059_LJ046-0189_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/PERIOD_LJ040-0059_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "Based on these films, the speed of the <b>President's</b> automobile is computed at an average speed of 11.2 miles per hour.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/PRESIDENT'S_LJ030-0156_LJ029-0198_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/PRESIDENT'S_LJ030-0156_LJ029-0198_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/PRESIDENT'S_LJ030-0156_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+<li> "The thieves it was supposed had secreted <b>themselves</b> in the warehouse during business hours, and waited till night to carry out their plans.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/THEMSELVES_LJ012-0099_LJ012-0083_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/THEMSELVES_LJ012-0099_LJ012-0083_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/THEMSELVES_LJ012-0099_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "but <b>through</b> the window in the door he caught a fleeting glimpse of a man walking in the vestibule toward the lunchroom.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/THROUGH_LJ035-0041_LJ025-0043_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/THROUGH_LJ035-0041_LJ025-0043_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/THROUGH_LJ035-0041_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+<li> "The President had frequently stated that he did not <b>want</b> agents to ride on these steps during a motorcade except when necessary.": </li>
+
+<table>
+  <tr>
+    <th>Simple word insertion: </th>
+    <td><audio controls> <source src="files/interspeech20/WANT_LJ030-0062_LJ045-0062_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Word insertion w/ prosody modification: </th>
+    <td> <audio controls> <source src="files/interspeech20/WANT_LJ030-0062_LJ045-0062_magic_copy_paste.wav" type="audio/wav"> </audio></td>
+  </tr>
+  <tr>
+    <th>Reference: </th>
+    <td> <audio controls> <source src="files/interspeech20/WANT_LJ030-0062_reference.wav" type="audio/wav"> </audio></td>
+  </tr>
+    
+</table>
+
+<br><br>
+
+
+
+</ul>
+
+
+	</div>
+</div>
+</body>
+</html>
