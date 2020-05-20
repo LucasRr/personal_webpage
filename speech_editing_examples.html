@@ -44,9 +44,9 @@ Simply inserting the corresponding waveform without any modifications leads to a
 Here we propose to modify the prosody features of the inserted word, in order to match its context. The experimental protocol is as follows:
 </p>
 
-<ol>
+<ol style="list-style-type:number">
 <li> Select a sentence (e.g. "No doubt wiser counsels prevailed with [...] John Russell"), and a word to insert (e.g. "Lord"), and extract their corresponding (phoneme-aligned) waveforms. </li>
-<li> Compute the prosody features (i.e. phoneme duratin, pitch, and loudness) or the left context ("No doubt ... with") and right context ("John Russel"), using WORLD analysis.</li>
+<li> Compute the prosody features (i.e. phoneme duration, pitch, and loudness) of the left context ("No doubt ... with") and right context ("John Russel"), using WORLD analysis.</li>
 <li> Given the phoneme sequence of the whole sentence ("No doubt wiser counsels prevailed with Lord John Russell"), and the previously computed prosody features of the left and right context, 
 <b>impute the missing prosody parameters</b> of the inserted word ("Lord") using our proposed LSTM-based parameter imputation algorithm.</li>
 <li> Using the estimated prosody parameters of the inserted word, re-synthesize the waveform of that word to match the estimated prosody. To do this, we first analyse its original waveform using WORLD analysis,
